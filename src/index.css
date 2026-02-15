@@ -4,65 +4,45 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --color-bg: hsl(221, 83%, 98%);
+  --color-border: hsl(221, 83%, 90%);
+  --color-border-alt: hsla(221, 83%, 20%, 0.2);
+
+  --color-primary: hsl(221, 83%, 53%);
+  --color-primary-hover: hsl(221, 83%, 47%);
+  --color-text-primary: hsl(221, 83%, 24%);
+
+  --color-secondary: hsl(262, 83%, 58%);
+  --color-secondary-hover: hsl(262, 83%, 50%);
+  --color-text-secondary: hsl(262, 83%, 34%);
+
+  --color-accent: hsl(262, 90%, 66%);
+
+  --color-surface: white;
+  --color-surface-alt: hsl(221, 83%, 96%);
+
+  --color-text-muted: hsl(221, 24%, 65%);
+  --color-text-inverse: white;
+
+  --color-success: hsl(142, 83%, 38%);
+  --color-warning: hsl(38, 83%, 48%);
+  --color-error: hsl(0, 83%, 70%);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  background: var(--color-bg);
+  color: var(--color-text-primary);
 }
