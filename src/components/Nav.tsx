@@ -1,10 +1,28 @@
+import { Link } from 'wouter';
+import { useAuth } from '../context/Auth';
+import './Nav.css';
+
+const navItems = [
+  { special: 'greeting', roles: ['member', 'staff'] },
+  { label: 'Hoem', path: '/' },
+  { label: 'About Us', path: '/about' },
+  { label: 'Adopt', path: '/adopt' },
+  { label: 'Release', path: '/release' },
+  { label: 'Login', path: '/login', roles: ['public'] },
+  { label: 'Register', path: '/register', roles: ['public'] },
+  { label: 'Manage', path: '/manage', roles: ['staff'] },
+  { special: 'logout', roles: ['member', 'staff'] },
+];
+
 function Nav() {
+  const { currentUsername, currentRole } = useAuth();
+
   return (
     <header className='site-header'>
       <nav className='nav'>
-        <a href='index.html' id='logo'>
+        {/* <a href='index.html' id='logo'>
           <img src='/images/logo.webp' alt='Car Rental Logo' />
-        </a>
+        </a> */}
 
         <input type='checkbox' id='nav-toggle' />
         <label htmlFor='nav-toggle'>
@@ -27,27 +45,33 @@ function Nav() {
         </label>
 
         <ul id='menu'>
-          <li>
-            <a href='index.html'>Home</a>
-          </li>
-          <li>
-            <a href='about.html'>About Us</a>
-          </li>
-          <li className='publiconly'>
-            <a href='login.html'>Login</a>
-          </li>
-          <li className='publiconly'>
-            <a href='sign-up.html'>Sign Up</a>
-          </li>
-          <li className='loginonly'>
-            <a href='reserve.html'>Reserve</a>
-          </li>
-          <li className='loginonly'>
-            <a href='history.html'>History</a>
-          </li>
-          <li className='loginonly'>
-            <a href='#'>Log out</a>
-          </li>
+          {navItems.map(
+            ({ label, path, roles = ['public', 'member'], special }) => {
+              const allowedToSeeNav = roles.some(r => currentRole === r);
+
+              if (!allowedToSeeNav) {
+                return undefined;
+              }
+
+              if (label && path) {
+                return (
+                  <li key={path}>
+                    <Link href={path}>{label}</Link>
+                  </li>
+                );
+              }
+
+              if (special === 'greeting') {
+                return <li key='greeting'>Hello, {currentUsername}</li>;
+              } else if (special === 'logout') {
+                return (
+                  <li key='logout'>
+                    <a>Logout</a>
+                  </li>
+                );
+              }
+            },
+          )}
         </ul>
       </nav>
     </header>

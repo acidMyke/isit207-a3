@@ -3,12 +3,14 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react';
 import { useLocalStorageState } from '../hooks';
 
 type AuthContextData = {
   currentUsername: string | undefined;
+  currentRole: 'public' | 'member' | 'staff';
   processLogin: (username: string, password: string) => boolean;
   processSignup: (username: string, password: string) => boolean;
   processLogout: () => void;
@@ -19,8 +21,11 @@ type User = {
   password: string;
 };
 
+const staffs: User[] = [{ username: 'notadmin', password: 'notpassword' }];
+
 const AuthContext = createContext<AuthContextData>({
   currentUsername: undefined,
+  currentRole: 'public',
   processLogin: () => false,
   processSignup: () => false,
   processLogout: () => false,
@@ -31,10 +36,14 @@ type Props = {
 };
 
 export function AuthContextProvider({ children }: Props) {
-  const [users, setUsers] = useLocalStorageState<User[]>('users', []);
+  const [users, setUsers] = useLocalStorageState<User[]>('users', [
+    { username: 'notadmin', password: 'notpassword' },
+  ]);
   const [currentUsername, setCurrentUsername] = useLocalStorageState<
     AuthContextData['currentUsername']
   >('current', undefined);
+  const [currentStaffname, setCurrentStaffname] =
+    useState<AuthContextData['currentUsername']>();
 
   const processLogin = useCallback(
     (username: string, password: string): boolean => {
@@ -42,17 +51,29 @@ export function AuthContextProvider({ children }: Props) {
         user => user.username === username && user.password === password,
       );
 
-      if (!existingUser) return false;
+      if (existingUser) {
+        setCurrentUsername(username);
+        return true;
+      }
 
-      setCurrentUsername(username);
-      return true;
+      const staff = staffs.find(
+        user => user.username === username && user.password === password,
+      );
+
+      if (staff) {
+        setCurrentStaffname(username);
+        return true;
+      }
+
+      return false;
     },
     [users, setUsers],
   );
 
   const { processLogout, processSignup } = useMemo(() => {
     const processSignup = (username: string, password: string): boolean => {
-      const userExists = users.some(user => user.username === username);
+      let userExists = users.some(user => user.username === username);
+      userExists ||= staffs.some(staff => staff.username === username);
       if (userExists) return false;
 
       const newUser: User = { username, password };
@@ -63,6 +84,7 @@ export function AuthContextProvider({ children }: Props) {
     };
 
     const processLogout = () => {
+      setCurrentStaffname(undefined);
       setCurrentUsername(undefined);
     };
 
@@ -71,7 +93,17 @@ export function AuthContextProvider({ children }: Props) {
 
   return (
     <AuthContext.Provider
-      value={{ currentUsername, processLogin, processLogout, processSignup }}
+      value={{
+        currentUsername: currentStaffname ?? currentUsername,
+        currentRole: currentStaffname
+          ? 'staff'
+          : currentUsername
+            ? 'member'
+            : 'public',
+        processLogin,
+        processLogout,
+        processSignup,
+      }}
     >
       {children}
     </AuthContext.Provider>
