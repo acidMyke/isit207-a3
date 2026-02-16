@@ -1,6 +1,7 @@
 import { Link } from 'wouter';
 import { useAuth } from '../context/Auth';
 import './Nav.css';
+import { useCallback, type MouseEventHandler } from 'react';
 
 const navItems = [
   { special: 'greeting', roles: ['member', 'staff'] },
@@ -15,7 +16,14 @@ const navItems = [
 ];
 
 function Nav() {
-  const { currentUsername, currentRole } = useAuth();
+  const { currentUsername, currentRole, processLogout } = useAuth();
+  const onLogoutClick = useCallback<MouseEventHandler>(
+    e => {
+      e.preventDefault();
+      processLogout();
+    },
+    [processLogout],
+  );
 
   return (
     <header className='site-header'>
@@ -56,7 +64,12 @@ function Nav() {
               if (label && path) {
                 return (
                   <li key={path}>
-                    <Link href={path}>{label}</Link>
+                    <Link
+                      href={path}
+                      className={isActive => (isActive ? 'active' : undefined)}
+                    >
+                      {label}
+                    </Link>
                   </li>
                 );
               }
@@ -66,7 +79,9 @@ function Nav() {
               } else if (special === 'logout') {
                 return (
                   <li key='logout'>
-                    <a>Logout</a>
+                    <a href='/' onClick={onLogoutClick}>
+                      Logout
+                    </a>
                   </li>
                 );
               }

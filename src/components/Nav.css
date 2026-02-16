@@ -52,7 +52,7 @@
       color: var(--color-text-inverse);
     }
 
-    li.active & {
+    li &.active {
       background: var(--color-primary);
       color: var(--color-text-inverse);
 
