@@ -26,7 +26,7 @@ function Nav() {
           </svg>
         </label>
 
-        <ul id='menu' data-isLoggedIn='false'>
+        <ul id='menu'>
           <li>
             <a href='index.html'>Home</a>
           </li>
