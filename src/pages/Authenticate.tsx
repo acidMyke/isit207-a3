@@ -1,20 +1,69 @@
-import { Link, useRoute } from 'wouter';
+import { Link, useLocation, useRoute } from 'wouter';
 import './Authenticate.css';
+import { useCallback, useState, type SubmitEventHandler } from 'react';
+import { useAuth } from '../context/Auth';
 
 const AuthenticationPagePath = '/(login|register)' as const;
 export const AuthenticationPage = Object.assign(
   function () {
+    const { processLogin, processRegister } = useAuth();
     const [, param] = useRoute(AuthenticationPagePath);
     const isRegister = param?.[0] === 'register';
+    const [error, setError] = useState<string | undefined>();
+    const [, redirect] = useLocation();
+
+    const onFormSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
+      e => {
+        e.preventDefault();
+
+        const data = new FormData(e.target);
+        const namail = (data.get('namail') as string | undefined)?.trim() ?? '';
+        const name = (data.get('name') as string | undefined)?.trim() ?? '';
+        const email = (data.get('email') as string | undefined)?.trim() ?? '';
+        const password = data.get('password') as string;
+
+        if (isRegister) {
+          if (name.length === 0) {
+            setError('Name cannot be empty');
+            return;
+          }
+          if (email.length === 0) {
+            setError('Email cannot be empty');
+            return;
+          }
+
+          if (!processRegister(email, name, password)) {
+            setError('Email/Name in used');
+            return;
+          }
+        } else {
+          if (namail.length === 0) {
+            setError('Name/Email cannot be empty');
+            return;
+          }
+
+          if (!processLogin(namail, password)) {
+            setError('Invalid credentials');
+            return;
+          }
+        }
+
+        redirect('/');
+      },
+      [isRegister, processLogin, processRegister],
+    );
 
     return (
       <main id='login_page'>
-        <section className='login_card'>
+        <section className='login_card' data-islogin={!isRegister}>
           <div className='login_title'>
             <h1>Welcome back</h1>
           </div>
 
-          <form style={{ display: 'grid', gap: '1.25rem' }}>
+          <form
+            style={{ display: 'grid', gap: '1.25rem' }}
+            onSubmit={onFormSubmit}
+          >
             {isRegister ? (
               <>
                 <div className='formfield'>
@@ -61,7 +110,9 @@ export const AuthenticationPage = Object.assign(
               <p>Must be at least 8 characters</p>
             </div>
 
-            <div className='formStatus'></div>
+            <div className='formStatus'>
+              {error && <p className='error'>{error}</p>}
+            </div>
 
             <button className='btn-action-gradient' type='submit'>
               {isRegister ? 'Register' : 'Sign in'}
@@ -79,7 +130,7 @@ export const AuthenticationPage = Object.assign(
             <div className='login_footer'>
               <span>Don't have an account?</span>
               <Link href='/register' className='btn-link inline'>
-                <strong>Sign up</strong>
+                <strong>Register</strong>
               </Link>
             </div>
           )}

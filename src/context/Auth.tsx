@@ -12,7 +12,11 @@ type AuthContextData = {
   currentUsername: string | undefined;
   currentRole: 'public' | 'member' | 'staff';
   processLogin: (usernameOrEmail: string, password: string) => boolean;
-  processSignup: (email: string, username: string, password: string) => boolean;
+  processRegister: (
+    email: string,
+    username: string,
+    password: string,
+  ) => boolean;
   processLogout: () => void;
 };
 
@@ -22,7 +26,7 @@ type User = {
   password: string;
 };
 
-const staffs: User[] = [
+const staffs: Omit<User, 'id'>[] = [
   {
     email: 'notadmin@whatever.com',
     username: 'notadmin',
@@ -34,7 +38,7 @@ const AuthContext = createContext<AuthContextData>({
   currentUsername: undefined,
   currentRole: 'public',
   processLogin: () => false,
-  processSignup: () => false,
+  processRegister: () => false,
   processLogout: () => false,
 });
 
@@ -72,15 +76,11 @@ export function AuthContextProvider({ children }: Props) {
 
       return false;
     },
-    [users, setUsers],
+    [users, setCurrentStaffname, setCurrentUsername],
   );
 
-  const { processLogout, processSignup } = useMemo(() => {
-    const processSignup = (
-      email: string,
-      username: string,
-      password: string,
-    ): boolean => {
+  const processRegister = useCallback(
+    (email: string, username: string, password: string): boolean => {
       let userExists = users.some(
         user => user.username === username || user.email === email,
       );
@@ -88,21 +88,19 @@ export function AuthContextProvider({ children }: Props) {
         staff => staff.username === username || staff.email === email,
       );
       if (userExists) return false;
-
       const newUser: User = { email, username, password };
       setUsers(users => [...users, newUser]);
       setCurrentUsername(username);
 
       return true;
-    };
+    },
+    [users, setUsers, setCurrentStaffname, setCurrentUsername],
+  );
 
-    const processLogout = () => {
-      setCurrentStaffname(undefined);
-      setCurrentUsername(undefined);
-    };
-
-    return { processLogout, processSignup };
-  }, [setUsers, setCurrentUsername]);
+  const processLogout = useCallback(() => {
+    setCurrentStaffname(undefined);
+    setCurrentUsername(undefined);
+  }, [setCurrentStaffname, setCurrentUsername]);
 
   return (
     <AuthContext.Provider
@@ -115,7 +113,7 @@ export function AuthContextProvider({ children }: Props) {
             : 'public',
         processLogin,
         processLogout,
-        processSignup,
+        processRegister,
       }}
     >
       {children}
