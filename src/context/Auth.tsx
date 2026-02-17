@@ -2,15 +2,17 @@ import {
   createContext,
   useCallback,
   useContext,
-  useMemo,
   useState,
   type ReactNode,
 } from 'react';
 import { useLocalStorageState } from '../hooks';
+import { navigate } from 'wouter/use-browser-location';
+
+type Role = 'public' | 'member' | 'staff';
 
 type AuthContextData = {
   currentUsername: string | undefined;
-  currentRole: 'public' | 'member' | 'staff';
+  currentRole: Role;
   processLogin: (usernameOrEmail: string, password: string) => boolean;
   processRegister: (
     email: string,
@@ -121,11 +123,22 @@ export function AuthContextProvider({ children }: Props) {
   );
 }
 
-export function useAuth() {
+type UseAuthOption = {
+  allowedRoles?: Role[];
+};
+
+export function useAuth(options: UseAuthOption = {}) {
   const context = useContext(AuthContext);
 
   if (!context) {
     throw new Error('useAuth must be used within AuthContextProvider');
+  }
+
+  if (
+    options.allowedRoles &&
+    !options.allowedRoles.every(a => a === context.currentRole)
+  ) {
+    navigate('/unauthorized', { replace: true });
   }
 
   return context;
