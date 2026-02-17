@@ -1,4 +1,10 @@
-import { Link, useLocation, useRoute } from 'wouter';
+import {
+  Link,
+  useLocation,
+  useRoute,
+  useSearch,
+  useSearchParams,
+} from 'wouter';
 import './Authenticate.css';
 import { useCallback, useState, type SubmitEventHandler } from 'react';
 import { useAuth } from '../context/Auth';
@@ -11,6 +17,7 @@ export const AuthenticationPage = Object.assign(
     const isRegister = param?.[0] === 'register';
     const [error, setError] = useState<string | undefined>();
     const [, redirect] = useLocation();
+    const [searchParam] = useSearchParams();
 
     const onFormSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
       e => {
@@ -48,7 +55,7 @@ export const AuthenticationPage = Object.assign(
           }
         }
 
-        redirect('/');
+        redirect(searchParam.get('redirect') ?? '/');
       },
       [isRegister, processLogin, processRegister],
     );
@@ -122,14 +129,20 @@ export const AuthenticationPage = Object.assign(
           {isRegister ? (
             <div className='login_footer'>
               <span>Have an account?</span>
-              <Link href='/login' className='btn-link inline'>
+              <Link
+                href={`/login?${searchParam.toString()}`}
+                className='btn-link inline'
+              >
                 <strong>Login</strong>
               </Link>
             </div>
           ) : (
             <div className='login_footer'>
               <span>Don't have an account?</span>
-              <Link href='/register' className='btn-link inline'>
+              <Link
+                href={`/register?${searchParam.toString()}`}
+                className='btn-link inline'
+              >
                 <strong>Register</strong>
               </Link>
             </div>

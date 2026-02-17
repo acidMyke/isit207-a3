@@ -2,11 +2,12 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
 } from 'react';
 import { useLocalStorageState } from '../hooks';
-import { navigate } from 'wouter/use-browser-location';
+import { useLocation } from 'wouter';
 
 type Role = 'public' | 'member' | 'staff';
 
@@ -129,17 +130,20 @@ type UseAuthOption = {
 
 export function useAuth(options: UseAuthOption = {}) {
   const context = useContext(AuthContext);
+  const [location, navigate] = useLocation();
 
   if (!context) {
     throw new Error('useAuth must be used within AuthContextProvider');
   }
 
-  if (
-    options.allowedRoles &&
-    !options.allowedRoles.every(a => a === context.currentRole)
-  ) {
-    navigate('/unauthorized', { replace: true });
-  }
+  useEffect(() => {
+    if (
+      options.allowedRoles &&
+      !options.allowedRoles.every(a => a === context.currentRole)
+    ) {
+      navigate(`/login?redirect=${encodeURIComponent(location)}`);
+    }
+  }, [options.allowedRoles]);
 
   return context;
 }
