@@ -11,17 +11,24 @@ import { useLocalStorageState } from '../hooks';
 type AuthContextData = {
   currentUsername: string | undefined;
   currentRole: 'public' | 'member' | 'staff';
-  processLogin: (username: string, password: string) => boolean;
-  processSignup: (username: string, password: string) => boolean;
+  processLogin: (usernameOrEmail: string, password: string) => boolean;
+  processSignup: (email: string, username: string, password: string) => boolean;
   processLogout: () => void;
 };
 
 type User = {
+  email: string;
   username: string;
   password: string;
 };
 
-const staffs: User[] = [{ username: 'notadmin', password: 'notpassword' }];
+const staffs: User[] = [
+  {
+    email: 'notadmin@whatever.com',
+    username: 'notadmin',
+    password: 'notpassword',
+  },
+];
 
 const AuthContext = createContext<AuthContextData>({
   currentUsername: undefined,
@@ -36,9 +43,7 @@ type Props = {
 };
 
 export function AuthContextProvider({ children }: Props) {
-  const [users, setUsers] = useLocalStorageState<User[]>('users', [
-    { username: 'notadmin', password: 'notpassword' },
-  ]);
+  const [users, setUsers] = useLocalStorageState<User[]>('users', []);
   const [currentUsername, setCurrentUsername] = useLocalStorageState<
     AuthContextData['currentUsername']
   >('current', undefined);
@@ -46,22 +51,22 @@ export function AuthContextProvider({ children }: Props) {
     useState<AuthContextData['currentUsername']>();
 
   const processLogin = useCallback(
-    (username: string, password: string): boolean => {
+    (usernameOrEmail: string, password: string): boolean => {
       const existingUser = users.find(
-        user => user.username === username && user.password === password,
+        user => user.username === usernameOrEmail && user.password === password,
       );
 
       if (existingUser) {
-        setCurrentUsername(username);
+        setCurrentUsername(usernameOrEmail);
         return true;
       }
 
       const staff = staffs.find(
-        user => user.username === username && user.password === password,
+        user => user.username === usernameOrEmail && user.password === password,
       );
 
       if (staff) {
-        setCurrentStaffname(username);
+        setCurrentStaffname(usernameOrEmail);
         return true;
       }
 
@@ -71,12 +76,20 @@ export function AuthContextProvider({ children }: Props) {
   );
 
   const { processLogout, processSignup } = useMemo(() => {
-    const processSignup = (username: string, password: string): boolean => {
-      let userExists = users.some(user => user.username === username);
-      userExists ||= staffs.some(staff => staff.username === username);
+    const processSignup = (
+      email: string,
+      username: string,
+      password: string,
+    ): boolean => {
+      let userExists = users.some(
+        user => user.username === username || user.email === email,
+      );
+      userExists ||= staffs.some(
+        staff => staff.username === username || staff.email === email,
+      );
       if (userExists) return false;
 
-      const newUser: User = { username, password };
+      const newUser: User = { email, username, password };
       setUsers(users => [...users, newUser]);
       setCurrentUsername(username);
 
