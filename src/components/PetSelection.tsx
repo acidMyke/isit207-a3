@@ -30,7 +30,7 @@ export const PetSelection = ({ onSelect }: PetSelectionProps) => {
     <div id='petSelection'>
       <h2>Select a Pet to Adopt</h2>
 
-      <form onSubmit={e => e.preventDefault()}>
+      <form className='custom' onSubmit={e => e.preventDefault()}>
         <div className='formfield'>
           <label>Species</label>
           <select
