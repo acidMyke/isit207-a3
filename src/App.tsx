@@ -2,7 +2,6 @@ import Nav from './components/Nav';
 import { AuthContextProvider } from './context/Auth';
 import { Route, Switch } from 'wouter';
 import HomePage from './pages/Home';
-import AboutPage from './pages/About';
 import AuthenticationPage from './pages/Authenticate';
 import AdoptPage from './pages/Adopt';
 
@@ -12,7 +11,6 @@ export const App = () => (
       <Nav />
       <Switch>
         <Route path='/' component={HomePage} />
-        <Route path='/about' component={AboutPage} />
         <Route path='/adopt' component={AdoptPage} />
         <Route path={AuthenticationPage.path} component={AuthenticationPage} />
       </Switch>

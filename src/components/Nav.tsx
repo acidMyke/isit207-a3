@@ -6,7 +6,6 @@ import { useCallback, type MouseEventHandler } from 'react';
 const navItems = [
   { special: 'greeting', roles: ['member', 'staff'] },
   { label: 'Home', path: '/' },
-  { label: 'About Us', path: '/about' },
   { label: 'Adopt', path: '/adopt', roles: ['member'] },
   { label: 'Release', path: '/release', roles: ['member'] },
   { label: 'Login', path: '/login', roles: ['public'] },
