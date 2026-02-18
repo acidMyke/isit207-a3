@@ -4,17 +4,23 @@ import { Route, Switch } from 'wouter';
 import HomePage from './pages/Home';
 import AuthenticationPage from './pages/Authenticate';
 import AdoptPage from './pages/Adopt';
+import { PetDataStoreProvider } from './context/Store/Provider';
 
 export const App = () => (
   <>
-    <AuthContextProvider>
-      <Nav />
-      <Switch>
-        <Route path='/' component={HomePage} />
-        <Route path='/adopt' component={AdoptPage} />
-        <Route path={AuthenticationPage.path} component={AuthenticationPage} />
-      </Switch>
-    </AuthContextProvider>
+    <PetDataStoreProvider>
+      <AuthContextProvider>
+        <Nav />
+        <Switch>
+          <Route path='/' component={HomePage} />
+          <Route path='/adopt' component={AdoptPage} />
+          <Route
+            path={AuthenticationPage.path}
+            component={AuthenticationPage}
+          />
+        </Switch>
+      </AuthContextProvider>
+    </PetDataStoreProvider>
   </>
 );
 

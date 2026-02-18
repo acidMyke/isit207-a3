@@ -32,11 +32,11 @@ export function PetDataStoreProvider({ children }: Props) {
   );
 }
 
-export function useStore(): PetDataStoreContextData {
+export function usePetDataStore(): PetDataStoreContextData {
   const contextData = useContext(petStoreContext);
 
   if (!contextData) {
-    throw new Error('useStore must be used within PetStoreProvider');
+    throw new Error('usePetDataStore must be used within PetStoreProvider');
   }
 
   return contextData;

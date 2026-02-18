@@ -1,9 +1,10 @@
-import { useAuth } from '../context/Auth';
+import { useState } from 'react';
+import { PetSelection } from '../components/PetSelection';
 
 function AdoptPage() {
-  useAuth({ allowedRoles: ['member'] });
+  const [petId, setPetId] = useState<string | undefined>();
 
-  return <div>AdoptPage</div>;
+  return <PetSelection onSelect={setPetId} />;
 }
 
 export default AdoptPage;
