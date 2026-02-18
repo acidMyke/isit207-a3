@@ -26,6 +26,7 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
     states;
   const generateId = () => crypto.randomUUID();
   const today = () => new Date().toISOString();
+  const getPetById = (petId: string) => pets.find(p => p.id === petId);
 
   const addPet = (pet: Omit<Pet, 'id' | 'status' | 'statusDate'>) => {
     const newPet: Pet = {
@@ -50,5 +51,28 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
     setReleases(prev => prev.filter(r => r.petId !== petId));
   };
 
-  return { addPet, updatePet, deletePet };
+  const adoptPet = (data: { petId: string; applicant: Applicant }) => {
+    const pet = getPetById(data.petId);
+
+    if (!pet) throw new Error('Pet not found');
+    if (pet.status === 'adopted') throw new Error('Pet is already adopted');
+
+    const adoption: Adoption = {
+      id: generateId(),
+      petId: data.petId,
+      applicant: data.applicant,
+      adoptionDate: today(),
+    };
+
+    setAdoptions(prev => [...prev, adoption]);
+    setPets(prev =>
+      prev.map(p =>
+        p.id === data.petId
+          ? { ...p, status: 'adopted', statusDate: adoption.adoptionDate }
+          : p,
+      ),
+    );
+  };
+
+  return { addPet, updatePet, deletePet, getPetById, adoptPet };
 }
