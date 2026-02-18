@@ -1,5 +1,11 @@
 import { useLocalStorageState } from '../../hooks';
-import type { Adoption, Applicant, Pet, Rehome } from './Data';
+import {
+  createDefaultPets,
+  type Adoption,
+  type Applicant,
+  type Pet,
+  type Rehome,
+} from './Data';
 
 export function createStoreState() {
   const [pets, setPets] = useLocalStorageState<Pet[]>('pets', []);
@@ -19,8 +25,7 @@ export function createStoreState() {
 }
 
 export function createActions(states: ReturnType<typeof createStoreState>) {
-  const { pets, adoptions, rehomes, setPets, setAdoptions, setRehomes } =
-    states;
+  const { pets, setPets, setAdoptions, setRehomes } = states;
   const generateId = () => crypto.randomUUID();
   const today = () => new Date().toISOString();
   const getPetById = (petId: string) => pets.find(p => p.id === petId);
@@ -93,6 +98,23 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
       releaseDate: today(),
     };
     setRehomes(prev => [...prev, rehomeEvent]);
+  };
+
+  (window as any).resetData = () => {
+    const retData: any = {};
+    setPets(pets => {
+      retData.pets = pets;
+      return createDefaultPets();
+    });
+    setAdoptions(adoptions => {
+      retData.adoptions = adoptions;
+      return [];
+    });
+    setRehomes(rehomes => {
+      retData.rehomes = rehomes;
+      return [];
+    });
+    return retData;
   };
 
   return { addPet, updatePet, deletePet, getPetById, adoptPet, rehomePet };
