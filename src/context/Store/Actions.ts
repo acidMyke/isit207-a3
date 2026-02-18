@@ -1,5 +1,5 @@
 import { useLocalStorageState } from '../../hooks';
-import type { Adoption, Pet, Release } from './Data';
+import type { Adoption, Applicant, Pet, Rehome } from './Data';
 
 export function createStoreState() {
   const [pets, setPets] = useLocalStorageState<Pet[]>('pets', []);
@@ -7,22 +7,19 @@ export function createStoreState() {
     'adoptions',
     [],
   );
-  const [releases, setReleases] = useLocalStorageState<Release[]>(
-    'releases',
-    [],
-  );
+  const [rehomes, setRehomes] = useLocalStorageState<Rehome[]>('rehomes', []);
   return {
     pets,
     setPets,
     adoptions,
     setAdoptions,
-    releases,
-    setReleases,
+    rehomes,
+    setRehomes,
   };
 }
 
 export function createActions(states: ReturnType<typeof createStoreState>) {
-  const { pets, adoptions, releases, setPets, setAdoptions, setReleases } =
+  const { pets, adoptions, rehomes, setPets, setAdoptions, setRehomes } =
     states;
   const generateId = () => crypto.randomUUID();
   const today = () => new Date().toISOString();
@@ -32,7 +29,7 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
     const newPet: Pet = {
       ...pet,
       id: generateId(),
-      status: 'released',
+      status: 'available',
       statusDate: today(),
     };
 
@@ -48,7 +45,7 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
   const deletePet = (petId: string) => {
     setPets(prev => prev.filter(pet => pet.id !== petId));
     setAdoptions(prev => prev.filter(a => a.petId !== petId));
-    setReleases(prev => prev.filter(r => r.petId !== petId));
+    setRehomes(prev => prev.filter(r => r.petId !== petId));
   };
 
   const adoptPet = (data: { petId: string; applicant: Applicant }) => {
@@ -74,5 +71,29 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
     );
   };
 
-  return { addPet, updatePet, deletePet, getPetById, adoptPet };
+  const rehomePet = (data: {
+    pet: Omit<Pet, 'id' | 'status' | 'statusDate'>;
+    applicant: Applicant;
+    reason: string;
+  }) => {
+    const newPet: Pet = {
+      ...data.pet,
+      id: generateId(),
+      status: 'available',
+      statusDate: today(),
+    };
+
+    setPets(prev => [...prev, newPet]);
+
+    const rehomeEvent = {
+      id: generateId(),
+      petId: newPet.id,
+      applicant: data.applicant,
+      reason: data.reason,
+      releaseDate: today(),
+    };
+    setRehomes(prev => [...prev, rehomeEvent]);
+  };
+
+  return { addPet, updatePet, deletePet, getPetById, adoptPet, rehomePet };
 }

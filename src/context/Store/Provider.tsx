@@ -3,7 +3,7 @@ import { createActions, createStoreState } from './Actions';
 
 type PetDataStoreContextData = Pick<
   ReturnType<typeof createStoreState>,
-  'pets' | 'adoptions' | 'releases'
+  'pets' | 'adoptions' | 'rehomes'
 > &
   ReturnType<typeof createActions>;
 
@@ -17,16 +17,16 @@ type Props = {
 
 export function PetDataStoreProvider({ children }: Props) {
   const storeInternalState = createStoreState();
-  const { pets, setPets, adoptions, setAdoptions, releases, setReleases } =
+  const { pets, setPets, adoptions, setAdoptions, rehomes, setRehomes } =
     storeInternalState;
 
   const actions = useMemo(
     () => createActions(storeInternalState),
-    [pets, setPets, adoptions, setAdoptions, releases, setReleases],
+    [pets, setPets, adoptions, setAdoptions, rehomes, setRehomes],
   );
 
   return (
-    <petStoreContext.Provider value={{ pets, adoptions, releases, ...actions }}>
+    <petStoreContext.Provider value={{ pets, adoptions, rehomes, ...actions }}>
       {children}
     </petStoreContext.Provider>
   );

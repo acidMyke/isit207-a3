@@ -1,6 +1,6 @@
 export type Pet = {
   id: string;
-  status: 'released' | 'adopted';
+  status: 'available' | 'adopted';
   name: string;
   species: 'dog' | 'cat';
   gender: 'male' | 'female';
@@ -26,7 +26,7 @@ export type Adoption = {
   adoptionDate: string;
 };
 
-export type Release = {
+export type Rehome = {
   id: string;
   petId: string;
 
