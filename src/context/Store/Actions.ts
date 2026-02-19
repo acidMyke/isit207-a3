@@ -8,6 +8,7 @@ import {
   type Pet,
   type Rehome,
 } from './Data';
+import { clearImages } from './Indexeddb';
 
 export function createStoreState() {
   const [pets, setPets] = useLocalStorageState<Pet[]>('pets', []);
@@ -117,6 +118,7 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
       retData.rehomes = rehomes;
       return [];
     });
+    clearImages();
     return retData;
   };
 
