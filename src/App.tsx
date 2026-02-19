@@ -5,6 +5,7 @@ import HomePage from './pages/Home';
 import AuthenticationPage from './pages/Authenticate';
 import AdoptPage from './pages/Adopt';
 import { PetDataStoreProvider } from './context/Store/Provider';
+import ConfirmationPage from './pages/Confirmation';
 
 export const App = () => (
   <>
@@ -18,6 +19,7 @@ export const App = () => (
             path={AuthenticationPage.path}
             component={AuthenticationPage}
           />
+          <Route path={ConfirmationPage.path} component={ConfirmationPage} />
         </Switch>
       </AuthContextProvider>
     </PetDataStoreProvider>

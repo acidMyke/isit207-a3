@@ -36,6 +36,9 @@ export type Rehome = {
   reason: string;
 };
 
+export const generateId = () =>
+  crypto.randomUUID().toLowerCase().replaceAll('-', '').substring(0, 8);
+
 export function createDefaultPets(): Pet[] {
   const staticPetData = [
     {
@@ -108,7 +111,7 @@ export function createDefaultPets(): Pet[] {
 
   return staticPetData.map(pet => ({
     ...pet,
-    id: crypto.randomUUID(),
+    id: generateId(),
     status: 'available',
   }));
 }

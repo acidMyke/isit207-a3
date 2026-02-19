@@ -5,10 +5,15 @@ import { usePetDataStore } from '../context/Store/Provider';
 
 type AdoptFormProps = {
   petId: string;
-  onBackButtonClick: () => void;
+  onCancelButtonClick: () => void;
+  afterSubmit: (adoptionId: string) => void;
 };
 
-export const AdoptForm = ({ petId, onBackButtonClick }: AdoptFormProps) => {
+export const AdoptForm = ({
+  petId,
+  onCancelButtonClick,
+  afterSubmit,
+}: AdoptFormProps) => {
   const { adoptPet, getPetById } = usePetDataStore();
   const [applicant, setApplicant] = useState<Applicant>({
     fullname: '',
@@ -22,10 +27,10 @@ export const AdoptForm = ({ petId, onBackButtonClick }: AdoptFormProps) => {
       e.preventDefault();
       if (!e.currentTarget.checkValidity()) return;
 
-      adoptPet({ petId, applicant });
-      e.currentTarget.reset();
+      const { adoptionId } = adoptPet({ petId, applicant });
+      afterSubmit(adoptionId);
     },
-    [adoptPet],
+    [adoptPet, applicant],
   );
 
   if (!pet) {
@@ -38,7 +43,7 @@ export const AdoptForm = ({ petId, onBackButtonClick }: AdoptFormProps) => {
       <button type='submit' className='btn-action-gradient'>
         Adopt Pet
       </button>
-      <button type='button' className='btn-link' onClick={onBackButtonClick}>
+      <button type='button' className='btn-link' onClick={onCancelButtonClick}>
         Cancel
       </button>
     </form>

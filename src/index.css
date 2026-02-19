@@ -92,7 +92,7 @@ body {
 }
 
 .btn-action-gradient {
-    margin-top: 0.5rem;
+  margin-top: 0.5rem;
   padding: 0.75rem;
   border-radius: 0.6rem;
   font-weight: 600;
@@ -141,7 +141,7 @@ form:not(.custom) {
 .formfield {
   display: grid;
   gap: 0.4rem;
-  
+
   label {
     font-size: 1.2rem;
     font-weight: 600;

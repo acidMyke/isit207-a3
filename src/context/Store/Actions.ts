@@ -1,6 +1,7 @@
 import { useLocalStorageState } from '../../hooks';
 import {
   createDefaultPets,
+  generateId,
   type Adoption,
   type Applicant,
   type Pet,
@@ -26,7 +27,6 @@ export function createStoreState() {
 
 export function createActions(states: ReturnType<typeof createStoreState>) {
   const { pets, setPets, setAdoptions, setRehomes } = states;
-  const generateId = () => crypto.randomUUID();
   const today = () => new Date().toISOString();
   const getPetById = (petId: string) => pets.find(p => p.id === petId);
 
@@ -74,6 +74,8 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
           : p,
       ),
     );
+
+    return { adoptionId: adoption.id };
   };
 
   const rehomePet = (data: {
