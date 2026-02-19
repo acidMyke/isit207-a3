@@ -11,6 +11,8 @@ export type Pet = {
   statusDate: string;
 };
 
+export type CreatePetParam = Omit<Pet, 'id' | 'status' | 'statusDate'>;
+
 export type Applicant = {
   fullname: string;
   email: string;

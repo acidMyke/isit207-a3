@@ -4,6 +4,7 @@ import {
   generateId,
   type Adoption,
   type Applicant,
+  type CreatePetParam,
   type Pet,
   type Rehome,
 } from './Data';
@@ -30,7 +31,7 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
   const today = () => new Date().toISOString();
   const getPetById = (petId: string) => pets.find(p => p.id === petId);
 
-  const addPet = (pet: Omit<Pet, 'id' | 'status' | 'statusDate'>) => {
+  const addPet = (pet: CreatePetParam) => {
     const newPet: Pet = {
       ...pet,
       id: generateId(),
@@ -79,7 +80,7 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
   };
 
   const rehomePet = (data: {
-    pet: Omit<Pet, 'id' | 'status' | 'statusDate'>;
+    pet: CreatePetParam;
     applicant: Applicant;
     reason: string;
   }) => {

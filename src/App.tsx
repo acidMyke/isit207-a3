@@ -6,6 +6,7 @@ import AuthenticationPage from './pages/Authenticate';
 import AdoptPage from './pages/Adopt';
 import { PetDataStoreProvider } from './context/Store/Provider';
 import ConfirmationPage from './pages/Confirmation';
+import RehomePage from './pages/Rehome';
 
 export const App = () => (
   <>
@@ -15,6 +16,7 @@ export const App = () => (
         <Switch>
           <Route path='/' component={HomePage} />
           <Route path='/adopt' component={AdoptPage} />
+          <Route path='/rehome' component={RehomePage} />
           <Route
             path={AuthenticationPage.path}
             component={AuthenticationPage}
