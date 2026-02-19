@@ -1,21 +1,35 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PetSelection } from '../components/PetSelection';
 import { AdoptForm } from '../components/AdoptForm';
+import PetProfile from '../components/PetProfile';
+import { usePetDataStore } from '../context/Store/Provider';
 
 function AdoptPage() {
+  const { getPetById } = usePetDataStore();
   const [petId, setPetId] = useState<string | undefined>();
+  const pet = useMemo(() => petId && getPetById(petId), [petId]);
 
-  if (!petId) {
+  if (!petId || !pet) {
     return <PetSelection onSelect={setPetId} />;
   }
 
   return (
-    <AdoptForm
-      petId={petId}
-      onBackButtonClick={() => {
-        setPetId(undefined);
+    <div
+      style={{
+        display: 'flex',
+        flexFlow: 'column',
+        maxWidth: '48rem',
+        margin: '0px auto',
       }}
-    />
+    >
+      <PetProfile pet={pet} />
+      <AdoptForm
+        petId={petId}
+        onCancelButtonClick={() => {
+          setPetId(undefined);
+        }}
+      />
+    </div>
   );
 }
 

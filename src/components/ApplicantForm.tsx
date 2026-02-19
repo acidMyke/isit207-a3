@@ -46,8 +46,8 @@ export const ApplicantForm = ({ value, onChange }: ApplicantFormProps) => {
           id='phone'
           type='tel'
           required
-          pattern='[0-9+\-\s]{7,}'
-          placeholder='+1 555 123 4567'
+          pattern='[0-9]{8}'
+          placeholder='87654321'
           value={value.phoneNumber}
           onChange={handleChange('phoneNumber')}
         />
