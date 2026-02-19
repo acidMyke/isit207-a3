@@ -1,3 +1,5 @@
+import { saveImage } from './Indexeddb';
+
 export type Pet = {
   id: string;
   status: 'available' | 'adopted';
@@ -6,7 +8,6 @@ export type Pet = {
   gender: 'male' | 'female';
   ageMonth: number;
   breed: string;
-  image: string;
   description: string;
   statusDate: string;
 };
@@ -41,6 +42,20 @@ export type Rehome = {
 export const generateId = () =>
   crypto.randomUUID().toLowerCase().replaceAll('-', '').substring(0, 8);
 
+async function fetchAndSaveImage(id: string, url: string): Promise<void> {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch image: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const blob = await response.blob();
+
+  await saveImage(id, blob);
+}
+
 export function createDefaultPets(): Pet[] {
   const staticPetData = [
     {
@@ -49,7 +64,7 @@ export function createDefaultPets(): Pet[] {
       gender: 'female',
       ageMonth: 14,
       breed: 'Retriever',
-      image: '/images/dogs-bella.jpg',
+      imageUrl: '/images/dogs-bella.webp',
       description:
         'Friendly and energetic Labrador who loves playing fetch and enjoys being around children.',
       statusDate: '2026-01-15',
@@ -60,7 +75,7 @@ export function createDefaultPets(): Pet[] {
       gender: 'male',
       ageMonth: 36,
       breed: 'German Shepherd',
-      image: '/images/dogs-max.jpg',
+      imageUrl: '/images/dogs-max.webp',
       description:
         'Loyal and intelligent. Well-trained and responds to basic commands.',
       statusDate: '2026-02-01',
@@ -71,7 +86,7 @@ export function createDefaultPets(): Pet[] {
       gender: 'female',
       ageMonth: 8,
       breed: 'British Shorthair',
-      image: '/images/cats-luna.jpg',
+      imageUrl: '/images/cats-luna.webp',
       description:
         'Calm and affectionate kitten who enjoys cuddles and quiet environments.',
       statusDate: '2026-02-10',
@@ -82,7 +97,7 @@ export function createDefaultPets(): Pet[] {
       gender: 'male',
       ageMonth: 24,
       breed: 'Maine Coon',
-      image: '/images/cats-roger.jpg',
+      imageUrl: '/images/cats-roger.webp',
       description:
         'Large and fluffy cat with a gentle personality. Gets along well with other pets.',
       statusDate: '2026-01-28',
@@ -93,7 +108,7 @@ export function createDefaultPets(): Pet[] {
       gender: 'female',
       ageMonth: 10,
       breed: 'Beagle',
-      image: '/images/dogs-daisy.jpg',
+      imageUrl: '/images/dogs-daisy.webp',
       description:
         'Curious and cheerful beagle who loves sniffing around and outdoor walks.',
       statusDate: '2026-02-12',
@@ -104,16 +119,16 @@ export function createDefaultPets(): Pet[] {
       gender: 'male',
       ageMonth: 18,
       breed: 'Ragdoll',
-      image: '/images/cats-klowee.jpg',
+      imageUrl: '/images/cats-klowee.webp',
       description:
         'Relaxed and friendly cat who enjoys being carried and staying close to people.',
       statusDate: '2026-02-14',
     },
   ] as const;
 
-  return staticPetData.map(pet => ({
-    ...pet,
-    id: generateId(),
-    status: 'available',
-  }));
+  return staticPetData.map(({ imageUrl, ...pet }) => {
+    const id = generateId();
+    fetchAndSaveImage(id, imageUrl);
+    return { ...pet, id, status: 'available' };
+  });
 }

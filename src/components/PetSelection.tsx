@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { usePetDataStore } from '../context/Store/Provider';
 import './Pets.css';
+import { IndexedDbImage } from './IndexedDbImage';
 
 type PetSelectionProps = {
   onSelect: (petId: string) => void;
@@ -63,7 +64,6 @@ export const PetSelection = ({ onSelect }: PetSelectionProps) => {
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
-          <p></p>
         </div>
       </form>
       <div id='petSelectionResults'>
@@ -71,7 +71,8 @@ export const PetSelection = ({ onSelect }: PetSelectionProps) => {
 
         {filteredPets.map(pet => (
           <div key={pet.id} className='petCard'>
-            <img src={pet.image} alt={pet.name} />
+            {/* <img src={pet.image} alt={pet.name} /> */}
+            <IndexedDbImage imageId={pet.id} alt={pet.name} />
 
             <h3>{pet.name}</h3>
             <p>

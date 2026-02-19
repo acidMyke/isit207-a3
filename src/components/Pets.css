@@ -41,7 +41,8 @@
     box-shadow: 0 8px 22px hsla(var(--color-primary), 0.15);
   }
 
-  img {
+  img,
+  div.loadingbox {
     width: 100%;
     height: 12rem;
     object-fit: cover;
@@ -78,7 +79,8 @@
     background: var(--color-surface-alt);
   }
 
-  img {
+  img,
+  div.loadingbox {
     width: 100%;
     height: 100%;
     object-fit: cover;
