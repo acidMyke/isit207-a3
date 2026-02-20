@@ -1,8 +1,8 @@
-import type { Pet } from '../context/Store/Data';
-import { IndexedDbImage } from './IndexedDbImage';
+import type { CreatePetParam, Pet } from '../context/Store/Data';
+import { FileImage, IndexedDbImage } from './IndexedDbImage';
 
 type PetProfileProps = {
-  pet: Pet;
+  pet: Pet | CreatePetParam;
 };
 
 const PetProfile = ({ pet }: PetProfileProps) => {
@@ -17,7 +17,11 @@ const PetProfile = ({ pet }: PetProfileProps) => {
   return (
     <section id='petProfile'>
       <div>
-        <IndexedDbImage imageId={pet.id} alt={pet.name} />
+        {'id' in pet ? (
+          <IndexedDbImage imageId={pet.id} alt={pet.name} />
+        ) : (
+          <FileImage file={pet.image} alt={pet.name} />
+        )}
       </div>
 
       <div>
