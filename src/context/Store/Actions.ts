@@ -8,7 +8,7 @@ import {
   type Pet,
   type Rehome,
 } from './Data';
-import { clearImages } from './Indexeddb';
+import { clearImages, saveImage } from './Indexeddb';
 
 export function createStoreState() {
   const [pets, setPets] = useLocalStorageState<Pet[]>('pets', []);
@@ -85,23 +85,29 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
     applicant: Applicant;
     reason: string;
   }) => {
+    const { image, ...petData } = data.pet;
+    const petId = generateId();
     const newPet: Pet = {
-      ...data.pet,
-      id: generateId(),
+      ...petData,
+      id: petId,
       status: 'available',
       statusDate: today(),
     };
 
+    const saveImagePr = saveImage(petId, image);
     setPets(prev => [...prev, newPet]);
 
+    const rehomeEventId = generateId();
     const rehomeEvent = {
-      id: generateId(),
+      id: rehomeEventId,
       petId: newPet.id,
       applicant: data.applicant,
       reason: data.reason,
       releaseDate: today(),
     };
     setRehomes(prev => [...prev, rehomeEvent]);
+
+    return { petId, saveImagePr, rehomeEventId };
   };
 
   (window as any).resetData = () => {

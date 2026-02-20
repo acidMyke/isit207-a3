@@ -12,7 +12,9 @@ export type Pet = {
   statusDate: string;
 };
 
-export type CreatePetParam = Omit<Pet, 'id' | 'status' | 'statusDate'>;
+export type CreatePetParam = Omit<Pet, 'id' | 'status' | 'statusDate'> & {
+  image: File;
+};
 
 export type Applicant = {
   fullname: string;
@@ -131,4 +133,66 @@ export function createDefaultPets(): Pet[] {
     fetchAndSaveImage(id, imageUrl);
     return { ...pet, id, status: 'available' };
   });
+}
+
+type UnvalidatedCreatePetParam = {
+  [key in keyof CreatePetParam]: FormDataEntryValue | null;
+};
+
+export function validateCreatePet(
+  data: UnvalidatedCreatePetParam,
+  setError: (error: string) => void,
+) {
+  const {
+    name,
+    species,
+    gender,
+    ageMonth: ageMonthRaw,
+    breed,
+    description,
+    image,
+  } = data;
+
+  const ageMonth = Number(ageMonthRaw);
+
+  if (!name) {
+    setError('Pet name is required.');
+    return;
+  }
+
+  if (species !== 'dog' && species !== 'cat') {
+    setError('Invalid species.');
+    return;
+  }
+
+  if (gender !== 'male' && gender !== 'female') {
+    setError('Invalid gender.');
+    return;
+  }
+
+  if (!Number.isInteger(ageMonth) || ageMonth < 0) {
+    setError('Age must be a valid non-negative number.');
+    return;
+  }
+
+  if (!breed || typeof breed !== 'string') {
+    setError('Breed is required.');
+    return;
+  }
+
+  if (
+    !description ||
+    typeof description !== 'string' ||
+    description.length < 10
+  ) {
+    setError('Description must be at least 10 characters.');
+    return;
+  }
+
+  if (!(image instanceof File)) {
+    setError('File error: Unsupported File');
+    return;
+  }
+
+  return data as unknown as CreatePetParam;
 }
