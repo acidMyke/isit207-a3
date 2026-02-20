@@ -9,11 +9,14 @@ import { FileImage } from './IndexedDbImage';
 
 type PetEntryFormProps = {
   onSubmit: (param: CreatePetParam) => void;
+  defualtData?: CreatePetParam;
 };
 
-function PetEntryForm({ onSubmit }: PetEntryFormProps) {
+function PetEntryForm({ onSubmit, defualtData }: PetEntryFormProps) {
   const [error, setError] = useState<string | undefined>();
-  const [imageFile, setImageFile] = useState<File | null>();
+  const [imageFile, setImageFile] = useState<File | null>(
+    defualtData?.image ?? null,
+  );
 
   const onFormSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
     async e => {
@@ -27,7 +30,7 @@ function PetEntryForm({ onSubmit }: PetEntryFormProps) {
       const ageMonth = formData.get('ageMonth');
       const breed = String(formData.get('breed') ?? '').trim();
       const description = String(formData.get('description') ?? '').trim();
-      const image = formData.get('image');
+      const image = formData.get('image') ?? imageFile;
 
       const payload = validateCreatePet(
         {
@@ -73,13 +76,13 @@ function PetEntryForm({ onSubmit }: PetEntryFormProps) {
 
       <div className='formfield'>
         <label>Name</label>
-        <input required name='name' />
+        <input required name='name' defaultValue={defualtData?.name} />
         <p>Please enter the pet's name.</p>
       </div>
 
       <div className='formfield canwrap'>
         <label>Species</label>
-        <select name='species'>
+        <select name='species' defaultValue={defualtData?.species}>
           <option value='dog'>Dog</option>
           <option value='cat'>Cat</option>
         </select>
@@ -87,7 +90,7 @@ function PetEntryForm({ onSubmit }: PetEntryFormProps) {
 
       <div className='formfield canwrap'>
         <label>Gender</label>
-        <select name='gender'>
+        <select name='gender' defaultValue={defualtData?.gender}>
           <option value='male'>Male</option>
           <option value='female'>Female</option>
         </select>
@@ -95,19 +98,30 @@ function PetEntryForm({ onSubmit }: PetEntryFormProps) {
 
       <div className='formfield canwrap'>
         <label>Age (months)</label>
-        <input type='number' min={0} required name='ageMonth' />
+        <input
+          type='number'
+          min={0}
+          required
+          name='ageMonth'
+          defaultValue={defualtData?.ageMonth}
+        />
         <p>Please enter a valid age.</p>
       </div>
 
       <div className='formfield canwrap'>
         <label>Breed</label>
-        <input required name='breed' />
+        <input required name='breed' defaultValue={defualtData?.breed} />
         <p>Please enter the breed.</p>
       </div>
 
       <div className='formfield'>
         <label>Description</label>
-        <textarea required minLength={10} name='description' />
+        <textarea
+          required
+          minLength={10}
+          name='description'
+          defaultValue={defualtData?.description}
+        />
         <p>Please enter at least 10 characters.</p>
       </div>
 

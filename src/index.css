@@ -154,7 +154,7 @@ form:not(.custom) {
     padding: 0.65rem 0.75rem;
     border-radius: 0.5rem;
     border: 1px solid var(--color-border);
-    background: var(--color-surface-alt) !important;
+    background: var(--color-surface-alt);
     color: var(--color-text-primary);
 
     -webkit-text-fill-color: var(--color-text-primary);
@@ -163,6 +163,7 @@ form:not(.custom) {
 
     &::placeholder {
       color: var(--color-text-muted);
+      -webkit-text-fill-color: var(--color-text-muted);
     }
 
     &:focus {

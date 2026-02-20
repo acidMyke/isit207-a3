@@ -81,11 +81,11 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
   };
 
   const rehomePet = (data: {
-    pet: CreatePetParam;
+    createPetParam: CreatePetParam;
     applicant: Applicant;
     reason: string;
   }) => {
-    const { image, ...petData } = data.pet;
+    const { image, ...petData } = data.createPetParam;
     const petId = generateId();
     const newPet: Pet = {
       ...petData,
