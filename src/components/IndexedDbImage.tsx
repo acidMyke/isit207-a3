@@ -18,18 +18,28 @@ function getImagePromise(imageId: string) {
   return promiseCache.get(imageId)!;
 }
 
-function ImageInner({ imageId, alt = '', className }: Props) {
-  const blob = use(getImagePromise(imageId));
+type FileImageProps = {
+  file: File | Blob | null;
+  alt?: string;
+  className?: string;
+  onCleanup?: () => void;
+};
 
+export function FileImage({
+  file,
+  alt = '',
+  className,
+  onCleanup,
+}: FileImageProps) {
   const objectUrl = useMemo(() => {
-    return blob ? URL.createObjectURL(blob) : null;
-  }, [blob]);
+    return file ? URL.createObjectURL(file) : null;
+  }, [file]);
 
   useEffect(() => {
     return () => {
       if (objectUrl) {
         URL.revokeObjectURL(objectUrl);
-        promiseCache.delete(imageId);
+        onCleanup?.();
       }
     };
   }, [objectUrl]);
@@ -39,6 +49,18 @@ function ImageInner({ imageId, alt = '', className }: Props) {
   }
 
   return <img src={objectUrl} alt={alt} className={className} />;
+}
+
+function ImageInner({ imageId, ...rest }: Props) {
+  const blob = use(getImagePromise(imageId));
+
+  return (
+    <FileImage
+      file={blob}
+      onCleanup={() => promiseCache.delete(imageId)}
+      {...rest}
+    />
+  );
 }
 
 export function IndexedDbImage(props: Props) {
