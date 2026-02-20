@@ -28,7 +28,8 @@ export function createStoreState() {
 }
 
 export function createActions(states: ReturnType<typeof createStoreState>) {
-  const { pets, setPets, setAdoptions, setRehomes } = states;
+  const { pets, adoptions, rehomes, setPets, setAdoptions, setRehomes } =
+    states;
   const today = () => new Date().toISOString();
   const getPetById = (petId: string) => pets.find(p => p.id === petId);
 
@@ -108,6 +109,10 @@ export function createActions(states: ReturnType<typeof createStoreState>) {
     setRehomes(prev => [...prev, rehomeEvent]);
 
     return { petId, saveImagePr, rehomeEventId };
+  };
+
+  (window as any).exportData = () => {
+    return { pets, adoptions, rehomes };
   };
 
   (window as any).resetData = () => {
