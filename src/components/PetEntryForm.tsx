@@ -125,24 +125,25 @@ function PetEntryForm({ onSubmit, defualtData }: PetEntryFormProps) {
         <p>Please enter at least 10 characters.</p>
       </div>
 
-      <div className='formfield'>
+      <div className='formfield canwrap'>
         <label htmlFor=''>Upload image</label>
         <input
           type='file'
           accept='image/*'
           name='image'
           onChange={onFileChange}
+          required
         />
         <p>Required</p>
       </div>
 
-      {imageFile && <FileImage file={imageFile} alt='preview' />}
+      {imageFile && <FileImage file={imageFile} alt='preview' width={'100%'} />}
 
       <div className='formStatus'>
         {error && <p className='error'>{error}</p>}
       </div>
 
-      <button type='submit' className='btn-action-gradient'>
+      <button type='submit' className='btn-action-gradient fullwidth'>
         Next
       </button>
     </form>

@@ -5,15 +5,16 @@ import PetProfile from '../components/PetProfile';
 import { RehomePetForm } from '../components/RehomePetForm';
 import { useLocation } from 'wouter';
 import ConfirmationPage from './Confirmation';
+import { PageLayout } from '../components/PageLayout';
 
 function RehomePage() {
   const [, navigate] = useLocation();
   const [currentStepper, setStepper] = useState<0 | 1>(0);
   const [createPetParam, setCreatePetParam] = useState<CreatePetParam>();
 
-  if (currentStepper === 0 || createPetParam == undefined) {
-    return (
-      <div style={{ maxWidth: '48rem', margin: '0px auto' }}>
+  return (
+    <PageLayout imageUrl='/images/rehome-page.webp' title='Rehome Pet'>
+      {currentStepper === 0 || createPetParam == undefined ? (
         <PetEntryForm
           onSubmit={payload => {
             setStepper(1);
@@ -21,22 +22,20 @@ function RehomePage() {
           }}
           defualtData={createPetParam}
         />
-      </div>
-    );
-  } else {
-    return (
-      <div style={{ maxWidth: '48rem', margin: '0px auto' }}>
-        <PetProfile pet={createPetParam} />
-        <RehomePetForm
-          createPetParam={createPetParam}
-          onCancelButtonClick={() => setStepper(0)}
-          afterSubmit={rehomeId =>
-            navigate(ConfirmationPage.createUrl('rehome', rehomeId))
-          }
-        />
-      </div>
-    );
-  }
+      ) : (
+        <>
+          <PetProfile pet={createPetParam} />
+          <RehomePetForm
+            createPetParam={createPetParam}
+            onCancelButtonClick={() => setStepper(0)}
+            afterSubmit={rehomeId =>
+              navigate(ConfirmationPage.createUrl('rehome', rehomeId))
+            }
+          />
+        </>
+      )}
+    </PageLayout>
+  );
 }
 
 export default RehomePage;

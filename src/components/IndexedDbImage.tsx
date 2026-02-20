@@ -23,6 +23,8 @@ type FileImageProps = {
   alt?: string;
   className?: string;
   onCleanup?: () => void;
+  width?: number | string;
+  height?: number | string;
 };
 
 export function FileImage({
@@ -30,6 +32,8 @@ export function FileImage({
   alt = '',
   className,
   onCleanup,
+  width,
+  height,
 }: FileImageProps) {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
 
@@ -52,7 +56,14 @@ export function FileImage({
     return <div>No image found</div>;
   }
 
-  return <img src={objectUrl} alt={alt} className={className} />;
+  return (
+    <img
+      src={objectUrl}
+      alt={alt}
+      className={className}
+      style={{ width, height }}
+    />
+  );
 }
 
 function ImageInner({ imageId, ...rest }: Props) {
