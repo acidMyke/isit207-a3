@@ -1,5 +1,11 @@
-import { useCallback, useState, type SubmitEventHandler } from 'react';
+import {
+  useCallback,
+  useState,
+  type ChangeEventHandler,
+  type SubmitEventHandler,
+} from 'react';
 import { validateCreatePet, type CreatePetParam } from '../context/Store/Data';
+import { FileImage } from './IndexedDbImage';
 
 type PetEntryFormProps = {
   onSubmit: (param: CreatePetParam) => void;
@@ -7,6 +13,7 @@ type PetEntryFormProps = {
 
 function PetEntryForm({ onSubmit }: PetEntryFormProps) {
   const [error, setError] = useState<string | undefined>();
+  const [imageFile, setImageFile] = useState<File | null>();
 
   const onFormSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
     async e => {
@@ -43,6 +50,22 @@ function PetEntryForm({ onSubmit }: PetEntryFormProps) {
     },
     [onSubmit, setError],
   );
+
+  const onFileChange = useCallback<ChangeEventHandler<HTMLInputElement>>(e => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setImageFile(null);
+      return;
+    }
+
+    const selectedFile = e.target.files[0];
+
+    if (!selectedFile.type.startsWith('image/')) {
+      setError('Please select a valid image file.');
+      return;
+    }
+
+    setImageFile(selectedFile);
+  }, []);
 
   return (
     <form onSubmit={onFormSubmit}>
@@ -90,13 +113,24 @@ function PetEntryForm({ onSubmit }: PetEntryFormProps) {
 
       <div className='formfield'>
         <label htmlFor=''>Upload image</label>
-        <input type='file' accept='image/*' name='image' />
+        <input
+          type='file'
+          accept='image/*'
+          name='image'
+          onChange={onFileChange}
+        />
         <p>Required</p>
       </div>
+
+      {imageFile && <FileImage file={imageFile} alt='preview' />}
 
       <div className='formStatus'>
         {error && <p className='error'>{error}</p>}
       </div>
+
+      <button type='submit' className='btn-action-gradient'>
+        Next
+      </button>
     </form>
   );
 }

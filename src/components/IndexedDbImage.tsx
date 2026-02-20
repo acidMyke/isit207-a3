@@ -1,4 +1,4 @@
-import { Suspense, use, useMemo, useEffect } from 'react';
+import { Suspense, use, useMemo, useEffect, useState } from 'react';
 import { getImage } from '../context/Store/Indexeddb';
 
 type Props = {
@@ -31,18 +31,22 @@ export function FileImage({
   className,
   onCleanup,
 }: FileImageProps) {
-  const objectUrl = useMemo(() => {
-    return file ? URL.createObjectURL(file) : null;
-  }, [file]);
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!file) {
+      setObjectUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setObjectUrl(url);
+
     return () => {
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-        onCleanup?.();
-      }
+      URL.revokeObjectURL(url);
+      onCleanup?.();
     };
-  }, [objectUrl]);
+  }, [file, onCleanup]);
 
   if (!objectUrl) {
     return <div>No image found</div>;
