@@ -125,6 +125,7 @@ form:not(.custom) {
   @media (min-width: 567px) {
     grid-template-columns: 1fr 1fr;
     .formfield:not(.canwrap),
+    &:has(button:only-of-type) > button,
     .fullwidth {
       grid-column: 1 / -1;
     }
