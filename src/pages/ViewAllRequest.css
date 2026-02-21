@@ -1,0 +1,62 @@
+.records-table-wrapper {
+  display: grid;
+  gap: 2rem;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 72rem;
+  margin: 0px auto;
+}
+
+.records-table {
+  width: 72rem;
+  margin: 0px auto;
+  border-collapse: collapse;
+  background: var(--color-surface-alt);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  font-size: 1.1rem;
+
+  th {
+    text-align: left;
+    padding: 1rem;
+    background: var(--color-primary);
+    color: var(--color-text-primary);
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+  }
+
+  tbody tr {
+    transition: background 150ms var(--transition-timing);
+
+    &:hover {
+      background: var(--color-surface);
+    }
+  }
+}
+
+.badge {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  &.adoption {
+    background: hsla(142, 71%, 45%, 0.15);
+    color: var(--color-success);
+  }
+
+  &.rehome {
+    background: hsla(0, 84%, 60%, 0.15);
+    color: var(--color-error);
+  }
+}

@@ -10,7 +10,7 @@ const navItems = [
   { label: 'Rehome', path: '/rehome' },
   { label: 'Login', path: '/login', roles: ['public'] },
   { label: 'Register', path: '/register', roles: ['public'] },
-  { label: 'Manage', path: '/manage', roles: ['staff'] },
+  { label: 'View all request', path: '/all-request', roles: ['staff'] },
   { special: 'logout', roles: ['member', 'staff'] },
 ];
 

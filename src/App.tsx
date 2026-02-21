@@ -7,6 +7,7 @@ import AdoptPage from './pages/Adopt';
 import { PetDataStoreProvider } from './context/Store/Provider';
 import ConfirmationPage from './pages/Confirmation';
 import RehomePage from './pages/Rehome';
+import { ViewAllRequestPage } from './pages/ViewAllRequest';
 
 export const App = () => (
   <>
@@ -22,6 +23,7 @@ export const App = () => (
             component={AuthenticationPage}
           />
           <Route path={ConfirmationPage.path} component={ConfirmationPage} />
+          <Route path='/all-request' component={ViewAllRequestPage} />
         </Switch>
       </AuthContextProvider>
     </PetDataStoreProvider>
