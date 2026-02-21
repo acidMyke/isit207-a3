@@ -1,4 +1,4 @@
-import { Suspense, use, useMemo, useEffect, useState } from 'react';
+import { Suspense, use, useEffect, useState } from 'react';
 import { getImage } from '../context/Store/Indexeddb';
 
 type Props = {
