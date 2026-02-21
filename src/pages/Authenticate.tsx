@@ -26,6 +26,9 @@ export const AuthenticationPage = Object.assign(
         const data = new FormData(e.target);
         const namail = (data.get('namail') as string | undefined)?.trim() ?? '';
         const name = (data.get('name') as string | undefined)?.trim() ?? '';
+        const fullname =
+          (data.get('fullname') as string | undefined)?.trim() ?? '';
+        const phone = (data.get('phone') as string | undefined)?.trim() ?? '';
         const email = (data.get('email') as string | undefined)?.trim() ?? '';
         const password = data.get('password') as string;
 
@@ -39,7 +42,7 @@ export const AuthenticationPage = Object.assign(
             return;
           }
 
-          if (!processRegister(email, name, password)) {
+          if (!processRegister(email, name, password, fullname, phone)) {
             setError('Email/Name in used');
             return;
           }
@@ -74,12 +77,6 @@ export const AuthenticationPage = Object.assign(
             {isRegister ? (
               <>
                 <div className='formfield'>
-                  <label htmlFor='name'>Name</label>
-                  <input id='name' name='name' placeholder='you' required />
-                  <p>Required</p>
-                </div>
-
-                <div className='formfield'>
                   <label htmlFor='email'>Email</label>
                   <input
                     id='email'
@@ -89,6 +86,24 @@ export const AuthenticationPage = Object.assign(
                     required
                   />
                   <p>Please include an '@' in the email address!</p>
+                </div>
+
+                <div className='formfield canwrap'>
+                  <label htmlFor='name'>Username</label>
+                  <input id='name' name='name' placeholder='you' required />
+                  <p>Required</p>
+                </div>
+
+                <div className='formfield canwrap'>
+                  <label htmlFor='fullname'>Full Name</label>
+                  <input
+                    id='fullname'
+                    type='text'
+                    required
+                    minLength={3}
+                    placeholder='You Qing'
+                  />
+                  <p>Please enter your full name.</p>
                 </div>
               </>
             ) : (
@@ -104,7 +119,7 @@ export const AuthenticationPage = Object.assign(
               </div>
             )}
 
-            <div className='formfield'>
+            <div className='formfield canwrap'>
               <label htmlFor='password'>Password</label>
               <input
                 id='password'
@@ -116,6 +131,22 @@ export const AuthenticationPage = Object.assign(
               />
               <p>Must be at least 8 characters</p>
             </div>
+
+            {isRegister && (
+              <>
+                <div className='formfield canwrap'>
+                  <label htmlFor='phone'>Phone Number</label>
+                  <input
+                    id='phone'
+                    type='tel'
+                    required
+                    pattern='[0-9]{8}'
+                    placeholder='87654321'
+                  />
+                  <p>Please enter a valid phone number.</p>
+                </div>
+              </>
+            )}
 
             <div className='formStatus'>
               {error && <p className='error'>{error}</p>}

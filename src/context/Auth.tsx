@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useLocalStorageState } from '../hooks';
 import { useLocation } from 'wouter';
+import type { Applicant } from './Store/Data';
 
 type Role = 'public' | 'member' | 'staff';
 
@@ -19,19 +20,25 @@ type AuthContextData = {
     email: string,
     username: string,
     password: string,
+    fullname: string,
+    phoneNumber: string,
   ) => boolean;
   processLogout: () => void;
 };
 
-type User = {
+type User = Applicant & {
   email: string;
   username: string;
   password: string;
 };
 
-const staffs: Omit<User, 'id'>[] = [
+type Staff = {
+  username: string;
+  password: string;
+};
+
+const staffs: Staff[] = [
   {
-    email: 'notadmin@whatever.com',
     username: 'notadmin',
     password: 'notpassword',
   },
@@ -83,15 +90,25 @@ export function AuthContextProvider({ children }: Props) {
   );
 
   const processRegister = useCallback(
-    (email: string, username: string, password: string): boolean => {
+    (
+      email: string,
+      username: string,
+      password: string,
+      fullname: string,
+      phoneNumber: string,
+    ): boolean => {
       let userExists = users.some(
         user => user.username === username || user.email === email,
       );
-      userExists ||= staffs.some(
-        staff => staff.username === username || staff.email === email,
-      );
+      userExists ||= staffs.some(staff => staff.username === username);
       if (userExists) return false;
-      const newUser: User = { email, username, password };
+      const newUser: User = {
+        email,
+        username,
+        password,
+        fullname,
+        phoneNumber,
+      };
       setUsers(users => [...users, newUser]);
       setCurrentUsername(username);
 

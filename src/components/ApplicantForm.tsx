@@ -20,7 +20,7 @@ export const ApplicantForm = ({ value, onChange }: ApplicantFormProps) => {
           type='text'
           required
           minLength={3}
-          placeholder='John Doe'
+          placeholder='You Qing'
           value={value.fullname}
           onChange={handleChange('fullname')}
         />
@@ -33,7 +33,7 @@ export const ApplicantForm = ({ value, onChange }: ApplicantFormProps) => {
           id='email'
           type='email'
           required
-          placeholder='john@email.com'
+          placeholder='you@example.com'
           value={value.email}
           onChange={handleChange('email')}
         />
