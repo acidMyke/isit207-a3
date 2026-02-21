@@ -2,6 +2,7 @@ import { useCallback, useState, type SubmitEventHandler } from 'react';
 import type { Applicant, CreatePetParam } from '../context/Store/Data';
 import { ApplicantForm } from './ApplicantForm';
 import { usePetDataStore } from '../context/Store/Provider';
+import { useAuth } from '../context/Auth';
 
 type RehomePetProps = {
   createPetParam: CreatePetParam;
@@ -15,11 +16,8 @@ export const RehomePetForm = ({
   afterSubmit,
 }: RehomePetProps) => {
   const { rehomePet } = usePetDataStore();
-  const [applicant, setApplicant] = useState<Applicant>({
-    fullname: '',
-    email: '',
-    phoneNumber: '',
-  });
+  const { getAsApplicant } = useAuth();
+  const [applicant, setApplicant] = useState<Applicant>(() => getAsApplicant());
 
   const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
     e => {

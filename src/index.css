@@ -25,9 +25,9 @@
   --color-text-muted: hsl(30, 15%, 45%);
   --color-text-inverse: white;
 
-  --color-success: hsl(28, 70%, 45%);
-  --color-warning: hsl(35, 85%, 55%);
-  --color-error: hsl(4, 70%, 60%);
+  --color-success: hsl(142, 83%, 38%);
+  --color-warning: hsl(38, 83%, 48%);
+  --color-error: hsl(0, 83%, 70%);
 }
 
 * {

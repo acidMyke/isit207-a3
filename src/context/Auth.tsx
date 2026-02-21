@@ -24,6 +24,7 @@ type AuthContextData = {
     phoneNumber: string,
   ) => boolean;
   processLogout: () => void;
+  getAsApplicant: () => Applicant;
 };
 
 type User = Applicant & {
@@ -50,6 +51,11 @@ const AuthContext = createContext<AuthContextData>({
   processLogin: () => false,
   processRegister: () => false,
   processLogout: () => false,
+  getAsApplicant: () => ({
+    fullname: '',
+    email: '',
+    phoneNumber: '',
+  }),
 });
 
 type Props = {
@@ -58,9 +64,10 @@ type Props = {
 
 export function AuthContextProvider({ children }: Props) {
   const [users, setUsers] = useLocalStorageState<User[]>('users', []);
-  const [currentUsername, setCurrentUsername] = useLocalStorageState<
-    AuthContextData['currentUsername']
-  >('current', undefined);
+  const [currentUser, setCurrentUser] = useLocalStorageState<Omit<
+    User,
+    'password'
+  > | null>('currentUser', null);
   const [currentStaffname, setCurrentStaffname] =
     useState<AuthContextData['currentUsername']>();
 
@@ -71,7 +78,8 @@ export function AuthContextProvider({ children }: Props) {
       );
 
       if (existingUser) {
-        setCurrentUsername(usernameOrEmail);
+        const { password: _, ...user } = existingUser;
+        setCurrentUser(user);
         return true;
       }
 
@@ -86,7 +94,7 @@ export function AuthContextProvider({ children }: Props) {
 
       return false;
     },
-    [users, setCurrentStaffname, setCurrentUsername],
+    [users, setCurrentStaffname, setCurrentUser],
   );
 
   const processRegister = useCallback(
@@ -110,30 +118,40 @@ export function AuthContextProvider({ children }: Props) {
         phoneNumber,
       };
       setUsers(users => [...users, newUser]);
-      setCurrentUsername(username);
+      setCurrentUser({ email, username, fullname, phoneNumber });
 
       return true;
     },
-    [users, setUsers, setCurrentStaffname, setCurrentUsername],
+    [users, setUsers, setCurrentStaffname, setCurrentUser],
   );
 
   const processLogout = useCallback(() => {
     setCurrentStaffname(undefined);
-    setCurrentUsername(undefined);
-  }, [setCurrentStaffname, setCurrentUsername]);
+    setCurrentUser(null);
+  }, [setCurrentStaffname, setCurrentUser]);
+
+  const getAsApplicant = useCallback(
+    () => ({
+      fullname: currentUser?.fullname ?? '',
+      email: currentUser?.email ?? '',
+      phoneNumber: currentUser?.phoneNumber ?? '',
+    }),
+    [currentUser],
+  );
 
   return (
     <AuthContext.Provider
       value={{
-        currentUsername: currentStaffname ?? currentUsername,
+        currentUsername: currentStaffname ?? currentUser?.username,
         currentRole: currentStaffname
           ? 'staff'
-          : currentUsername
+          : currentUser?.username
             ? 'member'
             : 'public',
         processLogin,
         processLogout,
         processRegister,
+        getAsApplicant,
       }}
     >
       {children}
