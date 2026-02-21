@@ -3,36 +3,31 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: light;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-bg: hsl(30, 60%, 94%);
+  --color-surface: hsl(0, 0%, 100%);
+  --color-surface-alt: hsl(30, 45%, 90%);
 
-  --color-bg: hsl(221, 83%, 98%);
-  --color-border: hsl(221, 83%, 90%);
-  --color-border-alt: hsla(221, 83%, 20%, 0.2);
+  --color-border: hsl(30, 30%, 80%);
+  --color-border-alt: hsla(20, 40%, 30%, 0.2);
 
-  --color-primary: hsl(221, 83%, 53%);
-  --color-primary-hover: hsl(221, 83%, 47%);
-  --color-text-primary: hsl(221, 83%, 24%);
+  --color-primary: hsl(14, 75%, 55%);
+  --color-primary-hover: hsl(14, 75%, 47%);
+  --color-text-primary: hsl(14, 40%, 28%);
 
-  --color-secondary: hsl(262, 83%, 58%);
-  --color-secondary-hover: hsl(262, 83%, 50%);
-  --color-text-secondary: hsl(262, 83%, 34%);
+  --color-secondary: hsl(215, 35%, 28%);
+  --color-secondary-hover: hsl(215, 35%, 22%);
+  --color-text-secondary: hsl(215, 25%, 20%);
 
-  --color-accent: hsl(262, 90%, 66%);
+  --color-accent: hsl(42, 90%, 60%);
 
-  --color-surface: white;
-  --color-surface-alt: hsl(221, 83%, 96%);
-
-  --color-text-muted: hsl(221, 24%, 65%);
+  --color-text-muted: hsl(30, 15%, 45%);
   --color-text-inverse: white;
 
-  --color-success: hsl(142, 83%, 38%);
-  --color-warning: hsl(38, 83%, 48%);
-  --color-error: hsl(0, 83%, 70%);
+  --color-success: hsl(28, 70%, 45%);
+  --color-warning: hsl(35, 85%, 55%);
+  --color-error: hsl(4, 70%, 60%);
 }
 
 * {

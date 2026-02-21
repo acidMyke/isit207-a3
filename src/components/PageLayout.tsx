@@ -15,7 +15,7 @@ export function PageLayout({ title, imageUrl, children }: PageLayoutProp) {
         <h1 id='pageLayoutHeroTitle'>{title}</h1>
       </section>
 
-      <section className='pageLayoutContent'>{children}</section>
+      <section id='pageLayoutContent'>{children}</section>
     </div>
   );
 }
