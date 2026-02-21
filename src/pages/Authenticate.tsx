@@ -98,6 +98,7 @@ export const AuthenticationPage = Object.assign(
                   <label htmlFor='fullname'>Full Name</label>
                   <input
                     id='fullname'
+                    name='fullname'
                     type='text'
                     required
                     minLength={3}
@@ -138,6 +139,7 @@ export const AuthenticationPage = Object.assign(
                   <label htmlFor='phone'>Phone Number</label>
                   <input
                     id='phone'
+                    name='phone'
                     type='tel'
                     required
                     pattern='[0-9]{8}'
