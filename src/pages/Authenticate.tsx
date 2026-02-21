@@ -1,10 +1,4 @@
-import {
-  Link,
-  useLocation,
-  useRoute,
-  useSearch,
-  useSearchParams,
-} from 'wouter';
+import { Link, useLocation, useRoute, useSearchParams } from 'wouter';
 import './Authenticate.css';
 import { useCallback, useState, type SubmitEventHandler } from 'react';
 import { useAuth } from '../context/Auth';
@@ -106,32 +100,47 @@ export const AuthenticationPage = Object.assign(
                   />
                   <p>Please enter your full name.</p>
                 </div>
+
+                <div className='formfield canwrap'>
+                  <label htmlFor='password'>Password</label>
+                  <input
+                    id='password'
+                    type='password'
+                    name='password'
+                    placeholder='••••••••'
+                    required
+                    minLength={8}
+                  />
+                  <p>Must be at least 8 characters</p>
+                </div>
               </>
             ) : (
-              <div className='formfield'>
-                <label htmlFor='namail'>Name/Email</label>
-                <input
-                  id='namail'
-                  name='namail'
-                  placeholder='you/you@example.com'
-                  required
-                />
-                <p>Required</p>
-              </div>
-            )}
+              <>
+                <div className='formfield'>
+                  <label htmlFor='namail'>Name/Email</label>
+                  <input
+                    id='namail'
+                    name='namail'
+                    placeholder='you/you@example.com'
+                    required
+                  />
+                  <p>Required</p>
+                </div>
 
-            <div className='formfield canwrap'>
-              <label htmlFor='password'>Password</label>
-              <input
-                id='password'
-                type='password'
-                name='password'
-                placeholder='••••••••'
-                required
-                minLength={8}
-              />
-              <p>Must be at least 8 characters</p>
-            </div>
+                <div className='formfield'>
+                  <label htmlFor='password'>Password</label>
+                  <input
+                    id='password'
+                    type='password'
+                    name='password'
+                    placeholder='••••••••'
+                    required
+                    minLength={8}
+                  />
+                  <p>Must be at least 8 characters</p>
+                </div>
+              </>
+            )}
 
             {isRegister && (
               <>

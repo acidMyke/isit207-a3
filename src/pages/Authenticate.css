@@ -1,7 +1,7 @@
 .login_card {
   margin: 3rem auto;
   width: 100%;
-  max-width: 36rem;
+  max-width: 40rem;
   background: var(--color-surface);
   border-radius: 1rem;
   border: 1px solid var(--color-border);
