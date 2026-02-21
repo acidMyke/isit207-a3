@@ -11,7 +11,9 @@ import {
 import { clearImages, saveImage } from './Indexeddb';
 
 export function createStoreState() {
-  const [pets, setPets] = useLocalStorageState<Pet[]>('pets', []);
+  const [pets, setPets] = useLocalStorageState<Pet[]>('pets', () =>
+    createDefaultPets(),
+  );
   const [adoptions, setAdoptions] = useLocalStorageState<Adoption[]>(
     'adoptions',
     [],
